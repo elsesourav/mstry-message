@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const acceptMessageSchema = z.object({
+export const messageSchema = z.object({
    content: z
       .string()
       .min(4, { message: "Content must be at least of 4 characters" })

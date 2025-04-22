@@ -8,8 +8,8 @@ export async function middleware(request: NextRequest) {
    const token = await getToken({ req: request });
 
    const path = request.nextUrl.pathname;
-   const publicPaths = ["/signin", "/signup", "/verify"];
-   const isPublicPath = publicPaths.includes(path);
+   const publicPaths = ["/signin", "/signup", "/verify", "/"];
+   const isPublicPath = publicPaths.some((e) => path.startsWith(e));
 
    if (isPublicPath && token) {
       return NextResponse.redirect(new URL("/", request.url));

@@ -46,7 +46,7 @@ export async function POST(request: Request) {
             verifyCodeExpiry: expiryDate,
             isVerified: false,
             isAdmin: false,
-            isAcceptingMessage: false,
+            isAcceptingMessages: false,
             messages: [],
          });
 
@@ -61,10 +61,12 @@ export async function POST(request: Request) {
       );
 
       if (!emailResponse.success) {
-         return errorResponse(emailResponse.message, 500);
+         return errorResponse(emailResponse.message, 400);
       }
-      return successResponse("User registered successfully. Please verify you email", 201);
-
+      return successResponse(
+         "User registered successfully. Please verify you email",
+         201
+      );
    } catch (error) {
       console.error("Error Registering user", error);
       return errorResponse("Error Registering user", 500);

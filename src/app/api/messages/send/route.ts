@@ -3,7 +3,6 @@ import { Message } from "@/models/Message.model";
 import UserModel from "@/models/User.model";
 import { errorResponse, successResponse } from "@/utils/response";
 
-
 export async function POST(request: Response) {
    await dbConnect();
 
@@ -16,7 +15,7 @@ export async function POST(request: Response) {
       }
 
       // is user accepting the messages
-      if (!user.isAcceptingMessage) {
+      if (!user.isAcceptingMessages) {
          return errorResponse("User not accepting message", 403);
       }
 

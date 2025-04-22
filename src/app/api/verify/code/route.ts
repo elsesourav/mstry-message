@@ -2,7 +2,7 @@ import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/models/User.model";
 import { errorResponse, successResponse } from "@/utils/response";
 
-export async function GET(request: Response) {
+export async function POST(request: Response) {
    await dbConnect();
 
    try {

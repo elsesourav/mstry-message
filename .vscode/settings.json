@@ -1,3 +1,17 @@
 {
-   "cSpell.words": ["atleast", "nextauth"]
+   "cSpell.words": [
+      "atleast",
+      "mstry",
+      "nextauth",
+      "sonner",
+      "turbopack",
+      "usehooks"
+   ],
+   "files.exclude": {
+      "**/.git": true,
+      "**/.svn": true,
+      "**/.hg": true,
+      "**/.DS_Store": true,
+      "**/Thumbs.db": true
+   }
 }
