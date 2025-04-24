@@ -1,26 +1,26 @@
 "use client";
 
+import MessageCard from "@/components/MessageCard";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import { Message } from "@/models/Message.model";
 import { acceptMessagesSchema } from "@/schemas/acceptMessage.schema";
 import { ApiResponse } from "@/types/ApiResponse";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios, { AxiosError } from "axios";
+import { Loader2, RefreshCcw } from "lucide-react";
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
-import { Loader2, RefreshCcw } from "lucide-react";
-import MessageCard from "@/components/MessageCard";
 
 export default function DashBoard() {
    const [messages, setMessages] = useState<Message[]>([]);
    const [isLoading, setIsLoading] = useState(false);
    const [isSwitchLoading, setIsSwitchLoading] = useState(false);
-
    const { data: session } = useSession();
 
    const handleDeleteMessage = (messageId: string) => {
@@ -37,7 +37,8 @@ export default function DashBoard() {
    const fetchAcceptMessage = useCallback(async () => {
       setIsSwitchLoading(true);
       try {
-         const response = await axios.get<ApiResponse>("/api/message/accept");
+         const response = await axios.get<ApiResponse>("/api/messages/accept");
+
          setValue("acceptMessages", response.data.isAcceptingMessages || false);
       } catch (error) {
          const axiosError = error as AxiosError<ApiResponse>;
@@ -56,8 +57,8 @@ export default function DashBoard() {
          setIsSwitchLoading(false);
 
          try {
-            const response = await axios.get<ApiResponse>("/api/message/get");
-            setMessages(response.data.messages || []);
+            const response = await axios.get<ApiResponse>("/api/messages/get");
+            setMessages(response.data?.messages || []);
             if (refresh) {
                toast.message("Refreshed Messages", {
                   description: "Showing latest messages",
@@ -78,8 +79,8 @@ export default function DashBoard() {
 
    useEffect(() => {
       if (!session || !session.user) return;
-      fetchMessages();
       fetchAcceptMessage();
+      fetchMessages();
    }, [session, setValue, fetchMessages, fetchAcceptMessage]);
 
    const handleSwitchChange = async () => {
@@ -100,7 +101,11 @@ export default function DashBoard() {
       }
    };
 
-   const { username } = session?.user as User;
+   if (!session || !session.user) {
+      return <div>Please login</div>;
+   }
+
+   const { username } = session.user as User;
    const { protocol, host } = window.location;
    const profileUrl = `${protocol}//${host}/u/${username}`;
 
@@ -111,10 +116,6 @@ export default function DashBoard() {
       });
    };
 
-   if (!session || !session.user) {
-      return <div>Please login</div>;
-   }
-
    return (
       <div className="my-8 mx-4 md:mx-4 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
          <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
@@ -122,14 +123,16 @@ export default function DashBoard() {
             <h2 className="text-lg font-semibold mb-2">
                Copy Your Unique Link
             </h2>{" "}
-            <div className="flex items-center">
-               <input
-                  type="text"
-                  disabled
-                  value={profileUrl}
-                  className="input input-bordered w-full p-2 mr-2"
-               />
-               <Button onClick={copyToClipboard}>Copy</Button>
+            <div className="flex items-center justify-between outline-1 p-1 outline-gray-200 rounded-md">
+               <Link
+                  className="w-auto px-2 text-blue-600 cursor-pointer"
+                  href={profileUrl}
+               >
+                  {profileUrl}
+               </Link>
+               <Button className="cursor-pointer" onClick={copyToClipboard}>
+                  Copy
+               </Button>
             </div>
          </div>
 

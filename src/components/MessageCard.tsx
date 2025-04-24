@@ -1,6 +1,5 @@
 import {
    Card,
-   CardContent,
    CardDescription,
    CardHeader,
    CardTitle,
@@ -18,32 +17,31 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
-import { Message } from "@/models/Message.model";
 import axios from "axios";
 import { ApiResponse } from "@/types/ApiResponse";
 import { toast } from "sonner";
+import { MessageCardProps } from "@/types/Base";
 
-type MessageCardProps = {
-   message: Message;
-   onMessageDelete: (messageId: string) => void;
-}
-
-export default function MessageCard({ message, onMessageDelete }: MessageCardProps) {
-
+export default function MessageCard({
+   message,
+   onMessageDelete,
+}: MessageCardProps) {
    const handleDeleteConfirm = async () => {
-      const response = await axios.delete<ApiResponse>(`/api/message/delete/${message._id}`)
+      const response = await axios.delete<ApiResponse>(
+         `/api/message/delete/${message._id}`
+      );
       toast.success(response.data.message);
       onMessageDelete(message._id);
    };
 
    return (
-      <Card>
+      <Card className="relative">
          <CardHeader>
-            <CardTitle>Card Title</CardTitle>
+            <CardTitle>{message.content}</CardTitle>
 
             <AlertDialog>
                <AlertDialogTrigger asChild>
-                  <Button variant="destructive">
+                  <Button className="absolute right-1 top-1 rounded-md size-7 cursor-pointer bg-[#f00a]" variant="destructive">
                      <X className="size-5" />
                   </Button>
                </AlertDialogTrigger>
@@ -67,9 +65,10 @@ export default function MessageCard({ message, onMessageDelete }: MessageCardPro
                </AlertDialogContent>
             </AlertDialog>
 
-            <CardDescription>Card Description</CardDescription>
+            <CardDescription>
+               {new Date(message.createdAt).toLocaleString()}
+            </CardDescription>
          </CardHeader>
-         <CardContent></CardContent>
       </Card>
    );
 }

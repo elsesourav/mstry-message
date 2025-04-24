@@ -64,9 +64,7 @@ export async function GET() {
 
       return successResponse({
          message: "User found",
-         data: {
-            isAcceptingMessages: foundUser.isAcceptingMessages,
-         },
+         isAcceptingMessages: foundUser.isAcceptingMessages,
          status: 200,
       });
    } catch (error) {

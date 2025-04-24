@@ -1,25 +1,45 @@
-import { errorResponse } from "@/utils/response";
-import { openai } from "@ai-sdk/openai";
-import { streamText } from "ai";
+import { errorResponse, successResponse } from "@/utils/response";
+import OpenAI from "openai";
 
-// Allow streaming responses up to 30 seconds
-export const maxDuration = 30;
+export async function GET() {
+   const prompt = `Generate a JSON array of 4 friendly and positive chat messages.
+Each message should be between 8 to 15 words long and include at least one emoji.
+The tone should be energetic yet polite, suitable for messaging someone you don’t know personally.
+Avoid slang or overly casual language—keep it warm, welcoming, and universally appealing.
+Return the result as a plain JSON array of strings, no extra formatting.`;
 
-export async function POST() {
+   const apiKey = process.env.NEMOTRON_API_KEY;
+   const openai = new OpenAI({
+      baseURL: "https://openrouter.ai/api/v1",
+      apiKey,
+   });
+
    try {
-      // const { messages } = await req.json();
-      const prompt = `Create a list of three open-ended and engaging questions formatted as a single string. Each question should be separated by '||'. These questions are for an anonymous social messaging platform, like Qooh.me, and should be suitable for a diverse audience. Avoid personal or sensitive topics, focusing instead on universal themes that encourage friendly interaction. For example, your output should be structured like this: 'What's a hobby you've recently started?||If you could have dinner with any historical figure, who would it be?|| What's a simple thing that makes you happy?'. Ensure the questions are intriguing, foster curiosity, and contribute to a positive and welcoming conversational environment.`
-      
-      const result = streamText({
-         model: openai("o1-mini"),
-         maxTokens: 400,
-         prompt,
+      const completion = await openai.chat.completions.create({
+         model: "nvidia/llama-3.3-nemotron-super-49b-v1:free",
+         messages: [
+            {
+               role: "assistant",
+               content: prompt,
+            },
+         ],
       });
+      
+      const message = completion.choices?.[0]?.message?.content;
 
-      return result.toDataStreamResponse();
+      if (!(message && message !== "")) {
+         return successResponse({
+            message: "Server are busy!",
+            status: 504,
+         });
+      }
 
+      return successResponse({
+         message: message.toString(),
+         status: 200,
+      });
    } catch (error) {
-      console.error("An unexpected error", error);
-      return errorResponse("An unexpected error", 500);
+      console.error("Error generating questions:", error);
+      return errorResponse("Failed to generate questions", 500);
    }
 }

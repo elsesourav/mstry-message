@@ -28,15 +28,15 @@ export default function Home() {
 
             <Carousel
                plugins={[Autoplay({ delay: 2000 })]}
-               className="w-full max-w-xs"
+               className="w-full max-w-md"
             >
                <CarouselContent>
                   {messages.map((message, index) => (
                      <CarouselItem key={index}>
                         <div className="p-1">
-                           <Card>
+                           <Card className="h-[150px] gap-2 grid grid-rows-[40px_auto_40px] py-2">
                               <CardHeader>{message.title}</CardHeader>
-                              <CardContent className="flex aspect-square items-center justify-center p-6">
+                              <CardContent className="flex items-center ">
                                  <span className="text-lg font-semibold">
                                     {message.content}
                                  </span>
@@ -51,8 +51,8 @@ export default function Home() {
                <CarouselNext />
             </Carousel>
          </main>
-         <footer className="text-center p-4 md:p-6">
-            @ {(new Date()).getFullYear()} Mystery Message. All rights reserved.
+         <footer className="text-center p-4 md:p-6 absolute w-full bottom-0">
+            @ {new Date().getFullYear()} Mystery Message. All rights reserved.
          </footer>
       </>
    );

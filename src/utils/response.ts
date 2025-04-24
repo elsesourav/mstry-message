@@ -1,98 +1,53 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-type SuccessResponseOptions = {
-   message?: string;
-   status?: number;
-   data?: any;
-};
-
-type ErrorResponseOptions = {
-   message?: string;
-   status?: number;
-   errors?: Record<string, any>;
-};
-
-function isObject(val: any): val is Record<string, any> {
-   return typeof val === "object" && val !== null && !Array.isArray(val);
-}
+import { ApiResponse } from "@/types/ApiResponse";
+import { NextResponse } from "next/server";
 
 export function successResponse(
-   messageOrOptions: string | SuccessResponseOptions,
-   status = 200,
-   data: any = {},
-): Response {
-   let message = "Success";
+   messageOrOptions: string | Partial<ApiResponse>,
+   status: number = 200
+): NextResponse {
+   const message = "Success";
+   let response: ApiResponse = {
+      success: true,
+      message,
+      status,
+   };
 
-   if (isObject(messageOrOptions)) {
-      const {
-         message: msg = "Success",
-         data: d = {},
-         status: s = 200,
-      } = messageOrOptions;
-      message = msg;
-      data = d;
-      status = s;
+   if (typeof messageOrOptions === "string") {
+      response.message = messageOrOptions;
    } else {
-      message = messageOrOptions;
+      response = {
+         success: true,
+         message: messageOrOptions.message ?? "Success",
+         status,
+         isAcceptingMessages: messageOrOptions.isAcceptingMessages,
+         messages: messageOrOptions.messages,
+      };
    }
 
-   return Response.json(
-      {
-         success: true,
-         message,
-         data,
-      },
-      { status }
-   );
+   return NextResponse.json(response, { status });
 }
 
 export function errorResponse(
-   messageOrOptions: string | ErrorResponseOptions,
-   status = 400,
-   errors: Record<string, any> = {}
-): Response {
-   let message = "Something went wrong";
-
-   if (isObject(messageOrOptions)) {
-      const {
-         message: msg = "Something went wrong",
-         status: s = 400,
-         errors: e = {},
-      } = messageOrOptions;
-      message = msg;
-      status = s;
-      errors = e;
-   } else {
-      message = messageOrOptions;
-   }
-
-   const responseBody: {
-      success: false;
-      message: string;
-      errors?: Record<string, any>;
-   } = {
+   messageOrOptions: string | Partial<ApiResponse>,
+   status: number = 400
+): NextResponse {
+   const message = "Something went wrong";
+   let response: ApiResponse = {
       success: false,
       message,
+      status,
    };
 
-   if (Object.keys(errors).length > 0) {
-      responseBody.errors = errors;
+   if (typeof messageOrOptions === "string") {
+      response.message = messageOrOptions;
+   } else {
+      response = {
+         success: false,
+         message: messageOrOptions.message ?? "Something went wrong",
+         status,
+         errors: messageOrOptions.errors,
+      };
    }
 
-   return Response.json(responseBody, { status });
+   return NextResponse.json(response, { status });
 }
-
-/* ========================= HOW TO USE ==============================
-
-import { errorResponse, successResponse } from "@/utils/response";
-
-return errorResponse("Invalid verification code");
-return successResponse("User created", { data: 1 });
-return successResponse("User created", { data: 1 }, 200);
-
-return errorResponse({
-   message: "Validation failed",
-   status: 422,
-   errors: { email: "Email already in use" },
-});
-
-====================================================================== */

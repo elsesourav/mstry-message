@@ -50,10 +50,10 @@ export default function SignIn() {
                toast.error(response.error);
             }
          }
-
+ 
          if (response?.url) {
             toast.success("Sign In Successfully");
-            router.replace(`/dashboard`);
+            router.replace("/dashboard");
          }
 
 
