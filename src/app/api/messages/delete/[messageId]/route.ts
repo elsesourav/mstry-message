@@ -3,13 +3,15 @@ import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/models/User.model";
 import { errorResponse, successResponse } from "@/utils/response";
 import { getServerSession, User } from "next-auth";
-import { NextRequest } from "next/server";
+import type { NextRequest as NextHandlerRequest } from "next/server";
 
+type RouteContext = {
+   params: {
+      messageId: string;
+   };
+};
 
-export async function DELETE(
-   req: NextRequest,
-   context: { params: { messageId: string } }
-) {
+export async function DELETE(req: NextHandlerRequest, context: RouteContext) {
    const { messageId } = context.params;
    await dbConnect();
 
