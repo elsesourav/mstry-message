@@ -3,12 +3,14 @@ import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/models/User.model";
 import { errorResponse, successResponse } from "@/utils/response";
 import { getServerSession, User } from "next-auth";
+import { NextRequest } from "next/server";
+
 
 export async function DELETE(
-   _: Response,
-   context: { params: Promise<{ messageId: string }> }
+   req: NextRequest,
+   context: { params: { messageId: string } }
 ) {
-   const { messageId } = await context.params;
+   const { messageId } = context.params;
    await dbConnect();
 
    const session = await getServerSession(authOptions);
@@ -30,7 +32,7 @@ export async function DELETE(
 
       return successResponse("Message Deleted", 200);
    } catch (error) {
-      console.log("Error in delete message route", error);
+      console.error("Error in delete message route", error);
       return errorResponse("Error deleting message", 500);
    }
 }
