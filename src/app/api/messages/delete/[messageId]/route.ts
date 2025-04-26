@@ -5,14 +5,11 @@ import { errorResponse, successResponse } from "@/utils/response";
 import { getServerSession, User } from "next-auth";
 import type { NextRequest as NextHandlerRequest } from "next/server";
 
-type RouteContext = {
-   params: {
-      messageId: string;
-   };
-};
-
-export async function DELETE(req: NextHandlerRequest, context: RouteContext) {
-   const { messageId } = context.params;
+export async function DELETE(
+   req: NextHandlerRequest,
+   { params }: { params: Promise<{ messageId: string }> }
+) {
+   const { messageId } = await params;
    await dbConnect();
 
    const session = await getServerSession(authOptions);
