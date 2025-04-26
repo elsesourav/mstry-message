@@ -4,6 +4,7 @@ import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { User } from "next-auth";
 import { Button } from "./ui/button";
+import { ModeToggle } from "./MoodToggle";
 
 export default function Navbar() {
    const { data: session } = useSession();
@@ -41,6 +42,7 @@ export default function Navbar() {
                   </Link>
                </>
             )}
+            <ModeToggle />
          </div>
       </nav>
    );

@@ -117,7 +117,7 @@ export default function DashBoard() {
    };
 
    return (
-      <div className="my-8 mx-4 md:mx-4 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
+      <div className="my-8 mx-4 md:mx-4 lg:mx-auto p-6 rounded w-full max-w-6xl">
          <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
          <div className="mb-4">
             <h2 className="text-lg font-semibold mb-2">
@@ -138,6 +138,7 @@ export default function DashBoard() {
 
          <div className="mb-4">
             <Switch
+               className="cursor-pointer scale-125"
                {...register("acceptMessages")}
                checked={acceptMessages}
                onCheckedChange={handleSwitchChange}

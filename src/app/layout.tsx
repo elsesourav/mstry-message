@@ -4,6 +4,7 @@ import AuthProvider from "@/utils/AuthProvider";
 import { Toaster } from "sonner"
 import "./globals.css"
 import { RootLayoutProps } from "@/types/Base";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = Geist({
    variable: "--font-geist-sans",
@@ -22,12 +23,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
    return (
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
          <AuthProvider>
             <body
                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
-               {children}
+               <ThemeProvider
+                  attribute="class"
+                  defaultTheme="system"
+                  enableSystem
+                  disableTransitionOnChange
+               >
+                  {children}
+               </ThemeProvider>
                <Toaster position="bottom-center" richColors />
             </body>
          </AuthProvider>

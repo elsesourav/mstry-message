@@ -12,7 +12,7 @@ export async function POST(request: Response) {
       const user = await UserModel.findOne({ username });
       if (!user) {
          return errorResponse("User not found", 404);
-      }
+      } 
 
       // is user accepting the messages
       if (!user.isAcceptingMessages) {

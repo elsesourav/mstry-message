@@ -1,9 +1,4 @@
-import {
-   Card,
-   CardDescription,
-   CardHeader,
-   CardTitle,
-} from "@/components/ui/card";
+import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import {
    AlertDialog,
    AlertDialogAction,
@@ -16,7 +11,7 @@ import {
    AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { CalendarDays, X } from "lucide-react";
 import axios from "axios";
 import { ApiResponse } from "@/types/ApiResponse";
 import { toast } from "sonner";
@@ -28,20 +23,23 @@ export default function MessageCard({
 }: MessageCardProps) {
    const handleDeleteConfirm = async () => {
       const response = await axios.delete<ApiResponse>(
-         `/api/message/delete/${message._id}`
+         `/api/messages/delete/${message._id}`
       );
       toast.success(response.data.message);
       onMessageDelete(message._id);
    };
 
    return (
-      <Card className="relative">
+      <Card className="relative flex justify-between">
          <CardHeader>
             <CardTitle>{message.content}</CardTitle>
 
             <AlertDialog>
                <AlertDialogTrigger asChild>
-                  <Button className="absolute right-1 top-1 rounded-md size-7 cursor-pointer bg-[#f00a]" variant="destructive">
+                  <Button
+                     className="absolute right-1 top-1 rounded-md size-7 cursor-pointer opacity-30 hover:opacity-100"
+                     variant="destructive"
+                  >
                      <X className="size-5" />
                   </Button>
                </AlertDialogTrigger>
@@ -64,11 +62,11 @@ export default function MessageCard({
                   </AlertDialogFooter>
                </AlertDialogContent>
             </AlertDialog>
-
-            <CardDescription>
-               {new Date(message.createdAt).toLocaleString()}
-            </CardDescription>
          </CardHeader>
+         <CardFooter className="gap-2">
+            <CalendarDays />
+            {new Date(message.createdAt).toLocaleString()}
+         </CardFooter>
       </Card>
    );
 }
