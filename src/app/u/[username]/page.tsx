@@ -86,7 +86,7 @@ export default function UserPage() {
 
    return (
       <div className="relative h-auto flex flex-col justify-center items-center mt-3 md:mt-4">
-         <main className="bg-gray-50 rounded shadow-md min-w-[90%] mx-2 md:min-w-3xl lg:min-w-4xl p-3 pb-6 md:pb-8 md:p-4">
+         <main className="rounded shadow-md min-w-[90%] mx-2 md:min-w-3xl lg:min-w-4xl p-3 pb-6 md:pb-8 md:p-4">
             <h1 className="text-3xl md:text-4xl mb-3 font-bold text-center">
                Public Profile Link
             </h1>
